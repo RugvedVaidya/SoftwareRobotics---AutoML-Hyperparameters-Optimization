@@ -30,21 +30,23 @@ git clone https://github.com/yourusername/automl-hyperparameter-optimization.git
 cd automl-hyperparameter-optimization
 
 2.**Create and activate a virtual environment**
+
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 3.**Install dependencies**
 
 4.**Start the flask app:**
+
 python app.py
 
 5.**Open your broswer and visit:**
+
 http://127.0.0.1:5000
 
 6.**Steps to follow on the web interface:**
+
 Upload your dataset (CSV file)
 Select the target column
 Click on “Run AutoML”
 View best performing model and accuracy
-
-## 📂 Project Structure
