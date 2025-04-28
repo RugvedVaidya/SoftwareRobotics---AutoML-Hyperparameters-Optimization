@@ -25,7 +25,7 @@
 <body class="bg-light">
 <div class="container mt-5">
     <h2 class="text-center mb-4">Model Training Results</h2>
-    
+
     {% if results %}
         <div class="card shadow mb-4">
             <div class="card-header bg-primary text-white">
@@ -36,9 +36,10 @@
                 <p><strong>Model Type:</strong> {{ model_type }}</p>
                 <p><strong>Model File:</strong> <code>{{ model_path }}</code></p>
                 <p><strong>Selected Models:</strong> {{ selected_models|join(', ') }}</p>
+                <a href="/download_report?best_model={{ best_model }}&model_type={{ model_type }}&results={{ results|tojson }}&hyperparameters={{ hyperparameters|tojson }}" class="btn btn-success mt-3">Download Report</a>
             </div>
         </div>
-    
+
         <div class="card shadow mb-4">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Model Performance</h4>
@@ -76,7 +77,61 @@
                 </table>
             </div>
         </div>
-    
+
+        {% if roc_auc_plots %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">ROC Curves</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for model, plot_url in roc_auc_plots.items() %}
+                    <div class="col-md-6 mb-4">
+                        <h5>{{ model }}</h5>
+                        <img src="data:image/png;base64,{{ plot_url }}" alt="ROC Curve for {{ model }}" class="img-fluid">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if confusion_matrix_plots %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-warning text-white">
+                <h4 class="mb-0">Confusion Matrices</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for model, plot_url in confusion_matrix_plots.items() %}
+                    <div class="col-md-6 mb-4">
+                        <h5>{{ model }}</h5>
+                        <img src="data:image/png;base64,{{ plot_url }}" alt="Confusion Matrix for {{ model }}" class="img-fluid">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if pr_curve_plots %}
+        <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Precision-Recall Curves</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for model, plot_url in pr_curve_plots.items() %}
+                    <div class="col-md-6 mb-4">
+                        <h5>{{ model }}</h5>
+                        <img src="data:image/png;base64,{{ plot_url }}" alt="Precision-Recall Curve for {{ model }}" class="img-fluid">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Hyperparameter Analysis</h4>
@@ -94,14 +149,14 @@
                                 </button>
                             </h2>
                             <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
-                                aria-labelledby="heading{{ loop.index }}" data-bs-parent="#hyperparamAccordion">
+                                 aria-labelledby="heading{{ loop.index }}" data-bs-parent="#hyperparamAccordion">
                                 <div class="accordion-body">
                                     <ul class="list-group">
                                         {% for param, values in params.items() %}
                                             <li class="list-group-item"><strong>{{ param }}:</strong> {{ values }}</li>
                                         {% endfor %}
                                     </ul>
-                                    
+
                                     {% if model in results %}
                                     <div class="hyperparameter-recommendation mt-3">
                                         <h5>Optimal Configuration</h5>
@@ -127,7 +182,7 @@
             <a href="/" class="btn btn-primary">Go Back</a>
         </div>
     {% endif %}
-    
+
     <div class="text-center mt-4">
         <a href="/" class="btn btn-primary">Start New Analysis</a>
     </div>
